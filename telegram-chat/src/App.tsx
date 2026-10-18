@@ -7,6 +7,7 @@ export default function App() {
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState("");
     const [chatId, setChatId] = useState<string | null>(null);
+    const [message, setMessage] = useState("");
     const apiUrl = 'https://4100.api.green-api.com';
     async function handleConnect() {
         if (idInstance.trim() === '' || apiTokenInstance.trim() === '') {
@@ -36,12 +37,13 @@ export default function App() {
     }
     async function handleSearchUser() {
         setChatId(null);
+        setMessage("");
         try {
             if (phoneNumber.trim() === '') {
                 setError('Номер телефона не заполнен');
                 return;
             }
-            if (Number.isNaN(Number(phoneNumber)))
+            if (!/^\d+$/.test(phoneNumber.trim()))
             {
                 setError('Номер телефона указан неверно');
                 return;
@@ -61,7 +63,6 @@ export default function App() {
             }
             const data = await response.json()
             setError('');
-            console.log(data);
             if (data.exist === true) {
                 setChatId(data.chatId);
                 setError('');
@@ -72,6 +73,44 @@ export default function App() {
         }
         catch (error) {
             setError('Ошибка получения ID пользователя: ' + error);
+        }
+    }
+    async function handleSendMessage() {
+        if (message.trim() === '') {
+            setError('Сообщение не может быть пустым')
+            return;
+        }
+        if (chatId === null) {
+            setError('ID чата пользователя не может быть пустым');
+            return;
+        }
+        try {
+            const response = await fetch(`${apiUrl}/waInstance${idInstance}/sendMessage/${apiTokenInstance}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chatId: chatId,
+                    message: message,
+                })
+            })
+            if (!response.ok) {
+                setError('Ошибка подключения к серверу');
+                return;
+            }
+            const data = await response.json()
+            setError('');
+            if (typeof(data.idMessage) == typeof('') && data.idMessage.length > 0) {
+                setMessage('');
+                setError('');
+            }
+            else {
+                setError('Не удалось отправить сообщение');
+            }
+        }
+        catch (error) {
+            setError('Ошибка отправки сообщения: ' + error);
         }
     }
   return (
@@ -133,13 +172,37 @@ export default function App() {
                       Найти пользователя
                   </button>
                   {chatId !== null && (
-                      <span>ID пользователя: {chatId}</span>
+                      <span>ID чата пользователя: {chatId}</span>
                   )}
                   {error !== '' &&
                       <span className='text-red-500'>{error}</span>
                   }
               </div>
           )}
+          {chatId !== null && (
+              <div className="rounded-lg flex flex-col w-full max-w-2xl p-2 mx-auto bg-white my-10">
+                  <h1 className="text-3xl font-bold p-2">Чат с пользователем</h1>
+                  <label htmlFor="message" className="text-sm text-gray-600">Сообщение</label>
+                  <textarea
+                      id="message"
+                      className="bg-white rounded-3xl my-2 py-2 px-4 text-sm focus:outline-blue-500 border border-gray-100"
+                      placeholder="Введите сообщение..."
+                      onChange={(event)=>{setMessage(event.target.value)}}
+                      value={message}
+                  />
+                  <button
+                      className="bg-blue-600 text-white p-2 rounded-lg"
+                      onClick={handleSendMessage}
+                  >
+                      Отправить
+                  </button>
+                  {error !== '' &&
+                      <span className='text-red-500'>{error}</span>
+                  }
+              </div>
+          )
+
+          }
 
 
 
