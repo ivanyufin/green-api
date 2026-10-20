@@ -4,6 +4,13 @@
 
 Проект разработан на React и TypeScript в рамках тестового задания на позицию Frontend Developer.
 
+## Онлайн-демонстрация
+
+**[Открыть Telegram Chat](https://ivanyufin.github.io/green-api/)**
+
+Для использования приложения необходимы действующие
+apuUrl, idInstance и apiTokenInstance от GREEN-API.
+
 ## Технологии
 
 - React
