@@ -1,17 +1,11 @@
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect} from "react";
+import type {ChatMessage, Chat} from './types.ts';
+import LoginForm from "./components/LoginForm";
+import SideBar from "./components/Sidebar.tsx";
+import ChatWindow from "./components/ChatWindow.tsx";
 
 export default function App() {
-    type ChatMessage = {
-        id: string;
-        chatId: string;
-        text: string;
-        direction: 'incoming' | 'outgoing';
-    };
 
-    type Chat = {
-        chatId: string;
-        phoneNumber: string;
-    };
 
     const [chats, setChats] = useState<Chat[]>(() => {
         try {
@@ -58,14 +52,9 @@ export default function App() {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [chatId, setChatId] = useState<string | null>(null);
     const [message, setMessage] = useState("");
-    const messagesContainerRef = useRef<HTMLDivElement | null>(null);
     const activeChat = chats.find(chat => chat.chatId === chatId);
 
     const apiUrl = 'https://4100.api.green-api.com';
-    useEffect(() => {
-        if (!messagesContainerRef.current) return;
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-    }, [messages, chatId]);
     useEffect(() => {
         localStorage.setItem("telegram_chats", JSON.stringify(chats));
     }, [chats])
@@ -193,7 +182,10 @@ export default function App() {
             setError('Ошибка отправки сообщения: ' + error);
         }
     }
-
+    function handleSelectChat(selectedChatId: string) {
+        setChatId(selectedChatId);
+        setMessage('');
+    }
 
     useEffect(() => {
         if (!isAuthorized) return;
@@ -295,41 +287,7 @@ export default function App() {
   return (
     <>
         {!isAuthorized && (
-
-            <div className="connecting-form min-h-screen bg-gray-100 py-10">
-
-                  <div className="rounded-lg flex flex-col w-full max-w-2xl p-2 mx-auto bg-white">
-                      <h1 className="text-3xl font-bold p-2">Telegram Chat</h1>
-                      <span className="text-sm text-gray-600 p-2">Подключение к GREEN-API</span>
-                      <label htmlFor="idInstance">idInstance</label>
-                      <input
-                          type="text"
-                          id="idInstance"
-                          className="bg-white rounded-3xl my-2 py-2 px-4 text-sm focus:outline-blue-500 border border-gray-100"
-                          placeholder="Введите idInstance"
-                          onChange={(event)=>{setIdInstance(event.target.value)}}
-                          value={idInstance}
-                      />
-                      <label htmlFor="apiTokenInstance">apiTokenInstance</label>
-                      <input
-                          type="password"
-                          id="apiTokenInstance"
-                          className="bg-white rounded-3xl my-2 py-2 px-4 text-sm focus:outline-blue-500 border border-gray-100"
-                          placeholder="Введите API-токен"
-                          onChange={(event)=>{setApiTokenInstance(event.target.value)}}
-                          value={apiTokenInstance}
-                      />
-                      <button
-                          className="bg-blue-600 text-white p-2 rounded-lg"
-                          onClick={handleConnect}
-                      >
-                          Подключиться
-                      </button>
-                      {error !== '' &&
-                          <span className='text-red-500'>{error}</span>
-                      }
-                  </div>
-            </div>
+            <LoginForm idInstance={idInstance} onIdInstanceChange={setIdInstance} onApiTokenChange={setApiTokenInstance} error={error} apiTokenInstance={apiTokenInstance} onConnect={handleConnect}/>
       )}
 
 
@@ -337,113 +295,9 @@ export default function App() {
 
         {isAuthorized && (
             <div className='flex h-screen w-full bg-white overflow-hidden'>
-                <aside className='w-80 shrink-0 border-r border-gray-200 bg-gray-50 p-4'>
+                <SideBar chats={chats} chatId={chatId} phoneNumber={phoneNumber} error={error} onPhoneNumberChange={setPhoneNumber} onSearchUser={handleSearchUser} onSelectChat={handleSelectChat}/>
+                <ChatWindow chatId={chatId} activeChat={activeChat} messages={messages} message={message} error={error} onMessageChange={setMessage} onSendMessage={handleSendMessage}/>
 
-                    <div className="flex flex-col gap-4">
-                        <h1 className="text-xl font-semibold">Новый чат</h1>
-                        <label htmlFor="phoneNumber" className="text-sm text-gray-600 p-2">Номер телефона</label>
-                        <input
-                            type="text"
-                            id="phoneNumber"
-                            className="bg-white rounded-3xl my-2 py-2 px-4 text-sm focus:outline-blue-500 border border-gray-100"
-                            placeholder="79991234567"
-                            onChange={(event)=>{setPhoneNumber(event.target.value)}}
-                            value={phoneNumber}
-                        />
-                        <button
-                            className="bg-blue-600 text-white p-2 rounded-lg"
-                            onClick={handleSearchUser}
-                        >
-                            Добавить чат
-                        </button>
-                        <h1 className='text-3xl font-bold p-2'>Мои чаты</h1>
-                        <div>
-                            {
-                                chats.map(chat => (
-                                    <button
-                                        key={chat.chatId}
-                                        onClick={() => {
-                                            setChatId(chat.chatId)
-                                            setMessage('');
-                                        }
-                                        }
-                                        className={`w-full text-left p-3 rounded-lg ${
-                                            chat.chatId === chatId ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'
-                                        }`}
-                                    >{chat.phoneNumber}</button>
-                                ))
-                            }
-                        </div>
-                        {error !== '' &&
-                            <span className='text-red-500'>{error}</span>
-                        }
-                    </div>
-                </aside>
-                <main className='flex-1 min-w-0 bg-white p-4 flex flex-col h-full'>
-                    {chatId !== null && (
-                            <div className="flex flex-col gap-4 h-full min-h-0">
-
-                                <h1 className="text-2xl font-bold p-2">
-                                    {activeChat?.phoneNumber ?? 'Активный чат не найден'}
-                                </h1>
-
-                                <div className='flex-1 min-h-0 overflow-y-auto' ref={messagesContainerRef}>
-                                    <div className="min-h-full flex flex-col justify-end gap-2 py-3">
-                                        {
-                                            messages
-                                                .filter(message => message.chatId === chatId)
-                                                .map(message => (
-                                                    <div className={`flex 
-                                            ${
-                                                        message.direction === 'outgoing'
-                                                            ? 'justify-end'
-                                                            : 'justify-start'
-                                                    }
-                                             
-                                            `}
-                                                         key={message.id}>
-                                                        <div className={`max-w-[75%] rounded-2xl px-4 py-2 wrap-break-word
-                                                    ${message.direction === 'outgoing'
-                                                            ? 'bg-blue-500 text-white'
-                                                            : 'bg-gray-100 text-gray-900'}
-                                                `}>
-                                                            {message.text}
-                                                        </div>
-                                                    </div>
-
-                                                ))
-                                        }
-                                    </div>
-                                </div>
-                                <div className='flex items-end gap-3 shrink-0'>
-                                <textarea
-                                    id="message"
-                                    className="flex-1 min-w-0 resize-none rounded-xl border border-gray-200 p-3"
-                                    placeholder="Введите сообщение..."
-                                    onChange={(event)=>{setMessage(event.target.value)}}
-                                    value={message}
-                                />
-                                <button
-                                    className="bg-blue-600 text-white p-2 rounded-lg shrink-0"
-                                    onClick={handleSendMessage}
-                                >
-                                    Отправить
-                                </button>
-                                </div>
-                                {error !== '' &&
-                                    <span className='text-red-500'>{error}</span>
-                                }
-                            </div>
-                        )
-                    }
-                    {chatId === null && (
-                        <div className="flex h-full items-center justify-center">
-                            <p className="text-lg text-gray-400">
-                                Выберите чат, чтобы начать переписку
-                            </p>
-                        </div>
-                    )}
-                </main>
             </div>
         )}
 
