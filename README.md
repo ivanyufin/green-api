@@ -9,7 +9,7 @@
 **[Открыть Telegram Chat](https://ivanyufin.github.io/green-api/)**
 
 Для использования приложения необходимы действующие
-apuUrl, idInstance и apiTokenInstance от GREEN-API.
+apuUrl(в задании не был указан, добавлен на всякий случай, вдруг что-то изменится), idInstance и apiTokenInstance от GREEN-API.
 
 ## Технологии
 
@@ -22,7 +22,7 @@ apuUrl, idInstance и apiTokenInstance от GREEN-API.
 
 ## Возможности
 
-- Подключение к GREEN-API по ID инстанса и API-токену
+- Подключение к GREEN-API по URL, ID инстанса и API-токену
 - Поиск пользователей Telegram по номеру телефона
 - Добавление собеседников в список чатов
 - Переключение между переписками
