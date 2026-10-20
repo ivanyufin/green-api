@@ -54,7 +54,9 @@ export default function App() {
     const [message, setMessage] = useState("");
     const activeChat = chats.find(chat => chat.chatId === chatId);
 
-    const apiUrl = 'https://4100.api.green-api.com';
+    //const apiUrl = 'https://4100.api.green-api.com';
+    const [apiUrl, setApiURL] = useState<string>('');
+
     useEffect(() => {
         localStorage.setItem("telegram_chats", JSON.stringify(chats));
     }, [chats])
@@ -287,7 +289,7 @@ export default function App() {
   return (
     <>
         {!isAuthorized && (
-            <LoginForm idInstance={idInstance} onIdInstanceChange={setIdInstance} onApiTokenChange={setApiTokenInstance} error={error} apiTokenInstance={apiTokenInstance} onConnect={handleConnect}/>
+            <LoginForm apiUrl={apiUrl} onApiUrlChange={setApiURL} idInstance={idInstance} onIdInstanceChange={setIdInstance} onApiTokenChange={setApiTokenInstance} error={error} apiTokenInstance={apiTokenInstance} onConnect={handleConnect}/>
       )}
 
 

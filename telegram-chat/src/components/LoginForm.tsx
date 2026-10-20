@@ -1,9 +1,11 @@
 type LoginFormProps = {
     idInstance: string,
     apiTokenInstance: string,
+    apiUrl: string,
     error: string,
     onIdInstanceChange: (value: string) => void;
     onApiTokenChange: (value: string) => void;
+    onApiUrlChange: (value: string) => void;
     onConnect: () => void;
 }
 
@@ -15,6 +17,15 @@ export default function LoginForm(props: LoginFormProps) {
             <div className="rounded-lg flex flex-col w-full max-w-2xl p-2 mx-auto bg-white">
                 <h1 className="text-3xl font-bold p-2">Telegram Chat</h1>
                 <span className="text-sm text-gray-600 p-2">Подключение к GREEN-API</span>
+                <label htmlFor="idInstance">apiUrl</label>
+                <input
+                    type="text"
+                    id="apiUrl"
+                    className="bg-white rounded-3xl my-2 py-2 px-4 text-sm focus:outline-blue-500 border border-gray-100"
+                    placeholder="Введите apiUrl"
+                    onChange={(event)=>{props.onApiUrlChange(event.target.value)}}
+                    value={props.apiUrl}
+                />
                 <label htmlFor="idInstance">idInstance</label>
                 <input
                     type="text"

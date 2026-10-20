@@ -1,32 +1,105 @@
-# React + TypeScript + Vite
+# Telegram Chat
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Веб-приложение для обмена сообщениями в Telegram через GREEN-API.
 
-Currently, two official plugins are available:
+Проект разработан на React и TypeScript в рамках тестового задания на позицию Frontend Developer.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Технологии
 
-## React Compiler
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- GREEN-API
+- Browser LocalStorage
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Возможности
 
-## Expanding the Oxlint configuration
+- Подключение к GREEN-API по ID инстанса и API-токену
+- Поиск пользователей Telegram по номеру телефона
+- Добавление собеседников в список чатов
+- Переключение между переписками
+- Отправка текстовых сообщений
+- Автоматическое получение входящих сообщений
+- Отправка по Enter, перенос строки по Shift + Enter
+- Отображение входящих и исходящих сообщений
+- Автоматическая прокрутка к последнему сообщению
+- Сохранение списка чатов и истории сообщений в LocalStorage
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Установка и запуск
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+Для запуска необходимы **Node.js** и **npm**.
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+1. Клонируйте репозиторий:
+
+   ```bash
+   git clone https://github.com/ivanyufin/green-api.git
+   ```
+
+2. Перейдите в папку проекта:
+
+   ```bash
+   cd green-api
+   ```
+
+3. Установите зависимости:
+
+   ```bash
+   npm install
+   ```
+
+4. Запустите сервер разработки:
+
+   ```bash
+   npm run dev
+   ```
+
+5. Откройте адрес, который Vite выведет в терминале (обычно `http://localhost:5173`).
+
+## Подключение к GREEN-API
+
+1. Создайте и настройте инстанс GREEN-API с поддержкой Telegram.
+2. Получите `apiURL`, `idInstance` и `apiTokenInstance`.
+3. Запустите приложение.
+4. Укажите данные инстанса в форме авторизации.
+5. После подключения добавьте собеседника по номеру телефона и откройте чат.
+
+## Проверка проекта
+
+Проверка TypeScript и создание production-сборки:
+
+`npm run build`
+
+Статический анализ кода:
+
+`npm run lint`
+
+## Структура проекта
+
+- `src/App.tsx` — основное состояние приложения и интеграция с API
+- `src/components/LoginForm.tsx` — форма подключения
+- `src/components/Sidebar.tsx` — боковая панель и список чатов
+- `src/components/ChatWindow.tsx` — окно переписки
+- `src/components/MessageBubble.tsx` — отображение сообщения
+- `src/types.ts` — общие типы TypeScript
+
+## Ограничения
+
+- Поддерживается обмен текстовыми сообщениями.
+- История переписки сохраняется локально в браузере и не синхронизируется с полной историей Telegram.
+- Сохранённые чаты и сообщения пока не разделяются по инстансам GREEN-API.
+- После обновления страницы необходимо повторно подключиться к GREEN-API.
+- API-токен не сохраняется в LocalStorage.
+
+Проект предназначен для демонстрации работы с React, TypeScript и GREEN-API.
+
+
+## Скриншоты
+
+### Форма подключения
+
+![Форма подключения к GREEN-API](screenshots/loginForm.png)
+
+### Интерфейс переписки
+
+![Интерфейс Telegram Chat](screenshots/chat.png)
