@@ -46,7 +46,7 @@ apuUrl, idInstance и apiTokenInstance от GREEN-API.
 2. Перейдите в папку проекта:
 
    ```bash
-   cd green-api
+   cd green-api/telegram-chat
    ```
 
 3. Установите зависимости:
@@ -83,12 +83,12 @@ apuUrl, idInstance и apiTokenInstance от GREEN-API.
 
 ## Структура проекта
 
-- `src/App.tsx` — основное состояние приложения и интеграция с API
-- `src/components/LoginForm.tsx` — форма подключения
-- `src/components/Sidebar.tsx` — боковая панель и список чатов
-- `src/components/ChatWindow.tsx` — окно переписки
-- `src/components/MessageBubble.tsx` — отображение сообщения
-- `src/types.ts` — общие типы TypeScript
+- `telegram-chat/src/App.tsx` — основное состояние приложения и интеграция с API
+- `telegram-chat/src/components/LoginForm.tsx` — форма подключения
+- `telegram-chat/src/components/Sidebar.tsx` — боковая панель и список чатов
+- `telegram-chat/src/components/ChatWindow.tsx` — окно переписки
+- `telegram-chat/src/components/MessageBubble.tsx` — отображение сообщения
+- `telegram-chat/src/types.ts` — общие типы TypeScript
 
 ## Ограничения
 
@@ -105,8 +105,8 @@ apuUrl, idInstance и apiTokenInstance от GREEN-API.
 
 ### Форма подключения
 
-![Форма подключения к GREEN-API](screenshots/loginForm.png)
+![Форма подключения к GREEN-API](telegram-chat/screenshots/loginForm.png)
 
 ### Интерфейс переписки
 
-![Интерфейс Telegram Chat](screenshots/chat.png)
+![Интерфейс Telegram Chat](telegram-chat/screenshots/chat.png)
