@@ -285,7 +285,7 @@ export default function App() {
             }
             controller.abort();
         }
-    }, [isAuthorized, idInstance, apiTokenInstance]);
+    }, [isAuthorized, idInstance, apiTokenInstance, apiUrl]);
   return (
     <>
         {!isAuthorized && (
