@@ -9,6 +9,7 @@ type ChatWindowProps = {
     messages: ChatMessage[];
     message: string;
     error: string;
+    isSending: boolean,
     onMessageChange: (value: string) => void;
     onSendMessage: () => void;
 };
@@ -67,15 +68,17 @@ export default function ChatWindow(props: ChatWindowProps) {
                                     value={props.message}
                                 />
                         <button
-                            className="h-11 bg-blue-600 text-white px-4 rounded-xl shrink-0"
+                            className="h-11 bg-blue-600 text-white px-4 rounded-xl shrink-0 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                             onClick={props.onSendMessage}
+                            disabled={props.isSending}
                         >
-                            Отправить
+                            {props.isSending && (
+                                <span className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+                            )}
+
+                            {props.isSending ? 'Отправка...' : 'Отправить'}
                         </button>
                     </div>
-                    {props.error !== '' &&
-                        <span className='text-red-500'>{props.error}</span>
-                    }
                 </div>
             )
             }

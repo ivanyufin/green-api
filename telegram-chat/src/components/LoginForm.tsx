@@ -3,6 +3,7 @@ type LoginFormProps = {
     apiTokenInstance: string,
     apiUrl: string,
     error: string,
+    isConnecting: boolean,
     onIdInstanceChange: (value: string) => void;
     onApiTokenChange: (value: string) => void;
     onApiUrlChange: (value: string) => void;
@@ -17,7 +18,7 @@ export default function LoginForm(props: LoginFormProps) {
             <div className="rounded-lg flex flex-col w-full max-w-2xl p-2 mx-auto bg-white">
                 <h1 className="text-3xl font-bold p-2">Telegram Chat</h1>
                 <span className="text-sm text-gray-600 p-2">Подключение к GREEN-API</span>
-                <label htmlFor="idInstance">apiUrl</label>
+                <label htmlFor="apiUrl">apiUrl</label>
                 <input
                     type="text"
                     id="apiUrl"
@@ -45,10 +46,14 @@ export default function LoginForm(props: LoginFormProps) {
                     value={props.apiTokenInstance}
                 />
                 <button
-                    className="bg-blue-600 text-white p-2 rounded-lg"
+                    className="flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg p-3 w-full disabled:opacity-60 disabled:cursor-not-allowed"
                     onClick={props.onConnect}
+                    disabled={props.isConnecting}
                 >
-                    Подключиться
+                    {props.isConnecting && (
+                        <span className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+                    )}
+                    {props.isConnecting ? 'Подключение...' : 'Подключиться'}
                 </button>
                 {props.error !== '' &&
                     <span className='text-red-500'>{props.error}</span>

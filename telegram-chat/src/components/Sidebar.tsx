@@ -5,6 +5,7 @@ type SidebarProps = {
     chatId: string | null;
     phoneNumber: string;
     error: string;
+    isSearchingUser: boolean;
     onPhoneNumberChange: (value: string) => void;
     onSearchUser: () => void;
     onSelectChat: (chatId: string) => void;
@@ -26,10 +27,17 @@ export default function Sidebar(props: SidebarProps) {
                     value={props.phoneNumber}
                 />
                 <button
-                    className="bg-blue-600 text-white p-2 rounded-lg"
+                    className="flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg p-3 w-full disabled:opacity-60 disabled:cursor-not-allowed"
                     onClick={props.onSearchUser}
+                    disabled={props.isSearchingUser}
                 >
-                    Добавить чат
+                    <>
+                        {props.isSearchingUser && (
+                            <span className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+                        )}
+
+                        {props.isSearchingUser ? 'Поиск...' : 'Добавить чат'}
+                    </>
                 </button>
                 <h1 className='text-3xl font-bold p-2'>Мои чаты</h1>
                 <div>
